@@ -2,6 +2,7 @@ import 'dart:html';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart';
 import 'package:lab_assignment/model/weather_model.dart';
 import 'package:lab_assignment/serivce/weather_api_client.dart';
@@ -120,13 +121,36 @@ class _homeState extends State<home> {
                   SizedBox(
                     height: 20.0,
                   ),
-                  Column(
-                    children: [
-                      Text("wind : ${data.wind}"),
-                      Text("humidity : ${data.humidity}"),
-                      Text("pressure : ${data.pressure}"),
-                    ],
-                  )
+                  Expanded(
+                      child: Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: ListView(
+                      children: <Widget>[
+                        ListTile(
+                            leading: FaIcon(FontAwesomeIcons.wind),
+                            title: Text("wind"),
+                            trailing: Text("${data.wind}")),
+                        ListTile(
+                            leading: FaIcon(FontAwesomeIcons.sun),
+                            title: Text("Humidity"),
+                            trailing: Text("${data.humidity}")),
+                        ListTile(
+                            leading: FaIcon(FontAwesomeIcons.tachographDigital),
+                            title: Text("Pressure"),
+                            trailing: Text("${data.pressure}")),
+                      ],
+                    ),
+                  )),
+                  // Column(
+                  //   children: [
+                  //     Row(
+                  //       children: [Text("Wind"), Text("${data.wind}")],
+                  //     ),
+                  //     Text("wind : ${data.wind}"),
+                  //     Text("humidity : ${data.humidity}"),
+                  //     Text("pressure : ${data.pressure}"),
+                  //   ],
+                  // )
                 ],
               );
             } else if (snapshot.connectionState == ConnectionState.waiting) {
