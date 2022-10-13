@@ -119,6 +119,13 @@ class _homeState extends State<home> {
                   Divider(),
                   SizedBox(
                     height: 20.0,
+                  ),
+                  Column(
+                    children: [
+                      Text("wind : ${data.wind}"),
+                      Text("humidity : ${data.humidity}"),
+                      Text("pressure : ${data.pressure}"),
+                    ],
                   )
                 ],
               );
