@@ -103,7 +103,7 @@ class _homeState extends State<home> {
                         });
                       },
                       child: const Text(
-                        'Sign up',
+                        'Get',
                         style: TextStyle(color: Colors.black),
                       )),
                   currentWeather(Icons.wb_sunny_rounded, "${data.temp}",
