@@ -1,4 +1,11 @@
+import 'dart:html';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:lab_assignment/model/weather_model.dart';
+import 'package:lab_assignment/serivce/weather_api_client.dart';
+import 'package:lab_assignment/views/current_weather.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,11 +36,97 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class home extends StatelessWidget {
+class home extends StatefulWidget {
   const home({Key? key}) : super(key: key);
 
   @override
+  State<home> createState() => _homeState();
+}
+
+class _homeState extends State<home> {
+  WeatherApiClient client = WeatherApiClient();
+  TextEditingController name = new TextEditingController();
+  String cityname = "";
+
+  Weather data = Weather();
+  Future<void> getData() async {
+    data = (await client.getCurrentWeather(cityname))!;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+        backgroundColor: Color(0xFFf9f9f9),
+        appBar: AppBar(
+          backgroundColor: Color(0xFFf9f9f9),
+          elevation: 0.0,
+          title:
+              const Text("Weather App", style: TextStyle(color: Colors.black)),
+          centerTitle: true,
+        ),
+        body: FutureBuilder(
+          future: getData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 18),
+                    child: TextField(
+                      controller: name,
+                      autocorrect: true,
+                      decoration: const InputDecoration(
+                        hintText: 'City Name',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        filled: true,
+                        fillColor: Colors.white70,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide:
+                              BorderSide(color: Colors.black26, width: 2),
+                        ),
+                        labelText: 'City',
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide: BorderSide(color: Colors.blue, width: 2),
+                        ),
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        String city = name.text.toString();
+                        setState(() {
+                          cityname = city;
+                        });
+                      },
+                      child: const Text(
+                        'Sign up',
+                        style: TextStyle(color: Colors.black),
+                      )),
+                  currentWeather(Icons.wb_sunny_rounded, "${data.temp}",
+                      "${data.cityName}"),
+                  SizedBox(
+                    height: 60,
+                  ),
+                  Text("Additional Information",
+                      style: TextStyle(
+                          fontSize: 24.0,
+                          color: Color(0xdd212121),
+                          fontWeight: FontWeight.bold)),
+                  Divider(),
+                  SizedBox(
+                    height: 20.0,
+                  )
+                ],
+              );
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            }
+            return Container();
+          },
+        ));
   }
 }
